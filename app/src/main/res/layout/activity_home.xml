@@ -11,6 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"
+        app:itemIconTint="@color/navigation_color"
+        app:itemTextColor="@color/navigation_color"
+        android:background="@drawable/rounded_corner_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/home_bottom_nav" />
 
@@ -20,8 +23,22 @@
         android:layout_height="544dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="414dp"
+        android:layout_height="93dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rounded_corner_top" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,15 +22,17 @@ public class HomeActivity extends AppCompatActivity {
         ProfileFragment profileFragment = new ProfileFragment();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_nav_home);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.bottom_nav_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
                         return true;
                     case R.id.bottom_nav_profile:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment);
+
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
                         return true;
                 }
                 return false;

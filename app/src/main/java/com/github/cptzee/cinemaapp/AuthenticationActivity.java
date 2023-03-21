@@ -15,10 +15,10 @@ public class AuthenticationActivity extends AppCompatActivity {
         SignUpFragment signUpFragment = new SignUpFragment();
 
         int button_flag = getIntent().getIntExtra("Value", 0);
-        if (button_flag == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.authentication_fragment_container, logInFragment);
+        if (button_flag == 1) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.authentication_fragment_container, logInFragment).commit();
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.authentication_fragment_container, signUpFragment);
+            getSupportFragmentManager().beginTransaction().replace(R.id.authentication_fragment_container, signUpFragment).commit();
         }
     }
 }

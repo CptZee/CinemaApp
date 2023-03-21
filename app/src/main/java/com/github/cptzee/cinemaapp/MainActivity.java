@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             Schedule schedule = new Schedule();
             for(int i = 1; i <= 4; i++){
                 schedule.setCinemaID(i);
+                schedule.setTime(time);
                 scheduleHelper.insert(schedule);
             }
         }

@@ -4,7 +4,7 @@ public class Movie{
     private int id;
     private String title;
     private String description;
-    private String rating; //MTRCB rating
+    private int ratingID; //MTRCB rating
     private int categoryID;
     private int cinemaID;
 
@@ -32,12 +32,12 @@ public class Movie{
         this.description = description;
     }
 
-    public String getRating() {
-        return rating;
+    public int getRating() {
+        return ratingID;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public void setRating(int rating) {
+        this.ratingID = rating;
     }
 
     public int getCategoryID() {

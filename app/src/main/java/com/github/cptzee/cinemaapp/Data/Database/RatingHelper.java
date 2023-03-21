@@ -9,30 +9,26 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.github.cptzee.cinemaapp.Data.Movie;
+import com.github.cptzee.cinemaapp.Data.Rating;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieHelper extends SQLiteOpenHelper {
-    public MovieHelper(Context context) {
-        super(context, "MovieDB", null, 1);
+public class RatingHelper extends SQLiteOpenHelper {
+    public RatingHelper(Context context) {
+        super(context, "RatingDB", null, 1);
     }
-    private String TABLENAME = "Movies";
+    private String TABLENAME = "Ratings";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         try{
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLENAME + " (" +
                     "id INTEGER," +
-                    "title TEXT," +
-                    "description TEXT," +
-                    "ratingID TEXT," +
-                    "categoryID INTEGER," +
-                    "cinemaID INTEGER," +
+                    "name TEXT," +
                     "active INTEGER);");
         }catch (SQLiteException e){
-            Log.e("Database", "Error creating the movies table");
+            Log.e("Database", "Error creating the ratings table");
         }
     }
 
@@ -42,21 +38,21 @@ public class MovieHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE " + TABLENAME + ";");
             onCreate(db);
         }catch (SQLiteException e){
-            Log.e("Database", "Error while upgrading the movies table");
+            Log.e("Database", "Error while upgrading the ratings table");
         }
     }
 
-    public void insert(Movie data) {
+    public void insert(Rating data) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             db.insert(TABLENAME, null, prepareData(data));
             db.close();
         }catch (SQLiteException e){
-            Log.e("Database", "Error while inserting into the movies table");
+            Log.e("Database", "Error while inserting into the ratings table");
         }
     }
 
-    public void remove(Movie data) {
+    public void remove(Rating data) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] where = { Integer.toString(data.getId()) };
         ContentValues content = new ContentValues();
@@ -65,60 +61,52 @@ public class MovieHelper extends SQLiteOpenHelper {
             db.update(TABLENAME, content, data.getId() + "= ?", where);
             db.close();
         }catch (SQLiteException e){
-            Log.e("Database", "Error while removing the " + data.getTitle() + " movie");
+            Log.e("Database", "Error while removing the " + data.getName() + " rating");
         }
     }
 
-    public void update(Movie data) {
+    public void update(Rating data) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] where = {Integer.toString(data.getId())};
         try{
             db.update(TABLENAME, prepareData(data), data.getId() + " = ?", where );
             db.close();
         }catch (SQLException e){
-            Log.e("Database", "Error while updating the " + data.getTitle() + " movie");
+            Log.e("Database", "Error while updating the " + data.getName() + " rating");
         }
     }
 
-    public List<Movie> get(){
+    public List<Rating> get(){
         SQLiteDatabase db = this.getWritableDatabase();
-        List<Movie> list = new ArrayList<>();
+        List<Rating> list = new ArrayList<>();
         try{
             Cursor reader = db.rawQuery("SELECT * FROM " + TABLENAME, null);
             while (reader.moveToNext()){
-                Movie data = prepareData(reader);
+                Rating data = prepareData(reader);
                 list.add(data);
             }
             db.close();
         }catch (SQLException e){
-            Log.e("Database", "Error while retrieving the movie");
+            Log.e("Database", "Error while retrieving the rating");
         }
         return list;
     }
 
     public int count() {
-        List<Movie> list = get();
+        List<Rating> list = get();
         return list.size();
     }
 
-    private ContentValues prepareData(Movie data){
+    private ContentValues prepareData(Rating data){
         ContentValues content = new ContentValues();
-        content.put("title", data.getTitle());
-        content.put("description", data.getDescription());
-        content.put("ratingID", data.getRating());
-        content.put("categoryID", data.getCategoryID());
-        content.put("cinemaID", data.getCinemaID());
+        content.put("name", data.getName());
         return content;
     }
 
-    private Movie prepareData(Cursor cursor){
-        Movie data = new Movie();
+    private Rating prepareData(Cursor cursor){
+        Rating data = new Rating();
         data.setId(cursor.getInt(0));
-        data.setTitle(cursor.getString(1));
-        data.setDescription(cursor.getString(2));
-        data.setRating(cursor.getInt(3));
-        data.setCategoryID(cursor.getInt(4));
-        data.setCinemaID(cursor.getInt(5));
+        data.setName(cursor.getString(1));
         return data;
     }
 }

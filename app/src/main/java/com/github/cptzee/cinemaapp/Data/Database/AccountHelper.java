@@ -40,7 +40,7 @@ public class AccountHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try{
-            db.execSQL("DROP TABLE Movies;");
+            db.execSQL("DROP TABLE " + TABLENAME + ";");
             onCreate(db);
         }catch (SQLiteException e){
             Log.e("Database", "Error while upgrading the account table");

@@ -9,29 +9,30 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.github.cptzee.cinemaapp.Data.Account;
-import com.github.cptzee.cinemaapp.Data.Credential;
+import com.github.cptzee.cinemaapp.Data.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CredentialHelper extends SQLiteOpenHelper {
-    public CredentialHelper(Context context) {
-        super(context, "CredentialDB", null, 1);
+public class MovieHelper extends SQLiteOpenHelper {
+    public MovieHelper(Context context) {
+        super(context, "MovieDB", null, 1);
     }
-    private String TABLENAME = "Credentials";
+    private String TABLENAME = "Movies";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         try{
             db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLENAME + " (" +
                     "id INTEGER," +
-                    "accountID INTEGER," +
-                    "username TEXT," +
-                    "password TEXT," +
+                    "title TEXT," +
+                    "description TEXT," +
+                    "rating TEXT," +
+                    "categoryID INTEGER," +
+                    "cinemaID INTEGER," +
                     "active INTEGER);");
         }catch (SQLiteException e){
-            Log.e("Database", "Error creating the " + TABLENAME  + " table");
+            Log.e("Database", "Error creating the movies table");
         }
     }
 
@@ -41,21 +42,21 @@ public class CredentialHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE " + TABLENAME + ";");
             onCreate(db);
         }catch (SQLiteException e){
-            Log.e("Database", "Error while upgrading the " + TABLENAME  + " table");
+            Log.e("Database", "Error while upgrading the movies table");
         }
     }
 
-    public void insert(Credential data) {
+    public void insert(Movie data) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             db.insert(TABLENAME, null, prepareData(data));
             db.close();
         }catch (SQLiteException e){
-            Log.e("Database", "Error while inserting into the credentials table");
+            Log.e("Database", "Error while inserting into the movies table");
         }
     }
 
-    public void remove(Credential data) {
+    public void remove(Movie data) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] where = { Integer.toString(data.getId()) };
         ContentValues content = new ContentValues();
@@ -64,56 +65,60 @@ public class CredentialHelper extends SQLiteOpenHelper {
             db.update(TABLENAME, content, data.getId() + "= ?", where);
             db.close();
         }catch (SQLiteException e){
-            Log.e("Database", "Error while removing the " + data.getAccountID() + " credentials");
+            Log.e("Database", "Error while removing the " + data.getTitle() + " movie");
         }
     }
 
-    public void update(Credential data) {
+    public void update(Movie data) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] where = {Integer.toString(data.getId())};
         try{
             db.update(TABLENAME, prepareData(data), data.getId() + " = ?", where );
             db.close();
         }catch (SQLException e){
-            Log.e("Database", "Error while updating the " + data.getAccountID() + " credential");
+            Log.e("Database", "Error while updating the " + data.getTitle() + " movie");
         }
     }
 
-    public List<Credential> get(){
+    public List<Movie> get(){
         SQLiteDatabase db = this.getWritableDatabase();
-        List<Credential> list = new ArrayList<>();
+        List<Movie> list = new ArrayList<>();
         try{
             Cursor reader = db.rawQuery("SELECT * FROM " + TABLENAME, null);
             while (reader.moveToNext()){
-                Credential data = prepareData(reader);
+                Movie data = prepareData(reader);
                 list.add(data);
             }
             db.close();
         }catch (SQLException e){
-            Log.e("Database", "Error while retrieving the accounts");
+            Log.e("Database", "Error while retrieving the movie");
         }
         return list;
     }
 
     public int count() {
-        List<Credential> list = get();
+        List<Movie> list = get();
         return list.size();
     }
 
-    private ContentValues prepareData(Credential data){
+    private ContentValues prepareData(Movie data){
         ContentValues content = new ContentValues();
-        content.put("accountID", data.getAccountID());
-        content.put("username", data.getUsername());
-        content.put("password", data.getPassword());
+        content.put("title", data.getTitle());
+        content.put("description", data.getDescription());
+        content.put("rating", data.getRating());
+        content.put("categoryID", data.getCategoryID());
+        content.put("cinemaID", data.getCinemaID());
         return content;
     }
 
-    private Credential prepareData(Cursor cursor){
-        Credential data = new Credential();
+    private Movie prepareData(Cursor cursor){
+        Movie data = new Movie();
         data.setId(cursor.getInt(0));
-        data.setAccountID(cursor.getInt(1));
-        data.setUsername(cursor.getString(2));
-        data.setPassword(cursor.getString(3));
+        data.setTitle(cursor.getString(1));
+        data.setDescription(cursor.getString(2));
+        data.setRating(cursor.getString(3));
+        data.setCategoryID(cursor.getInt(4));
+        data.setCinemaID(cursor.getInt(5));
         return data;
     }
 }
